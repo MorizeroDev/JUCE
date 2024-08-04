@@ -144,6 +144,14 @@ void AudioTransportSource::stop()
     }
 }
 
+bool AudioTransportSource::waitUntilActuallyPlaying() const noexcept
+{
+    int n = 500;
+    while (--n >= 0 && ! actuallyPlaying)
+        Thread::sleep (1);
+    return actuallyPlaying;
+}
+
 void AudioTransportSource::setPosition (double newPosition)
 {
     if (sampleRate > 0.0)
@@ -261,6 +269,7 @@ void AudioTransportSource::getNextAudioBlock (const AudioSourceChannelInfo& info
     if (masterSource != nullptr && ! stopped)
     {
         masterSource->getNextAudioBlock (info);
+        actuallyPlaying = true;
 
         if (! playing)
         {
@@ -279,6 +288,9 @@ void AudioTransportSource::getNextAudioBlock (const AudioSourceChannelInfo& info
         }
 
         stopped = ! playing;
+        if (stopped) {
+            actuallyPlaying = false;
+        }
 
         for (int i = info.buffer->getNumChannels(); --i >= 0;)
             info.buffer->applyGainRamp (i, info.startSample, info.numSamples, lastGain, gain);
@@ -287,6 +299,7 @@ void AudioTransportSource::getNextAudioBlock (const AudioSourceChannelInfo& info
     {
         info.clearActiveBufferRegion();
         stopped = true;
+        actuallyPlaying = false;
     }
 
     lastGain = gain;
