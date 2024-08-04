@@ -78,6 +78,16 @@ public:
     */
     float getGain() const noexcept                      { return gain; }
 
+    /** setLastGain.
+        @see lastGain
+    */
+    void setLastGain (float newGain) noexcept;
+
+    /** getLastGain.
+        @see lastGain
+    */
+    float getLastGain() const noexcept                  { return lastGain; }
+
     //==============================================================================
     /** Implementation of the AudioIODeviceCallbackWithContext method. */
     void audioDeviceIOCallbackWithContext (const float* const* inputChannelData,
