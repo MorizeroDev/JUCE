@@ -68,6 +68,11 @@ void AudioSourcePlayer::setGain (const float newGain) noexcept
     gain = newGain;
 }
 
+void AudioSourcePlayer::setLastGain (const float newGain) noexcept
+{
+    lastGain = newGain;
+}
+
 void AudioSourcePlayer::audioDeviceIOCallbackWithContext (const float* const* inputChannelData,
                                                           int totalNumInputChannels,
                                                           float* const* outputChannelData,
