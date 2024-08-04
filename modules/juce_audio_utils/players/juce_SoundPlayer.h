@@ -108,6 +108,8 @@ public:
      */
     void playTestSound();
 
+    AudioSourcePlayer& refPlayer()                      { return player; };
+
     //==============================================================================
     /** @internal */
     void audioDeviceIOCallbackWithContext (const float* const*, int, float* const*, int, int, const AudioIODeviceCallbackContext&) override;
