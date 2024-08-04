@@ -120,7 +120,12 @@ public:
     void stop();
 
     /** Returns true if it's currently playing. */
-    bool isPlaying() const noexcept     { return playing; }
+    bool isPlaying() const noexcept             { return playing; }
+
+    /** Returns true if it's actuallyPlaying playing. */
+    bool isActuallyPlaying() const noexcept     { return actuallyPlaying; }
+
+    bool waitUntilActuallyPlaying() const noexcept;
 
     //==============================================================================
     /** Changes the gain to apply to the output.
@@ -167,7 +172,7 @@ private:
 
     CriticalSection callbackLock;
     float gain = 1.0f, lastGain = 1.0f;
-    std::atomic<bool> playing { false }, stopped { true };
+    std::atomic<bool> playing { false }, stopped { true }, actuallyPlaying { false };
     double sampleRate = 44100.0, sourceSampleRate = 0;
     int blockSize = 128, readAheadBufferSize = 0;
     bool isPrepared = false;
