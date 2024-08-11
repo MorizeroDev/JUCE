@@ -504,7 +504,7 @@ private:
 
                 startResult = stream->waitForStateChange (expectedState, &nextState, timeoutNanos);
 
-                JUCE_OBOE_LOG ("Starting Oboe stream with result: " + getOboeString (startResult);
+                JUCE_OBOE_LOG ("Starting Oboe stream with result: " + getOboeString (startResult)
                                  + "\nUses AAudio = " + String ((int) stream->usesAAudio())
                                  + "\nDirection = " + getOboeString (stream->getDirection())
                                  + "\nSharingMode = " + getOboeString (stream->getSharingMode())
