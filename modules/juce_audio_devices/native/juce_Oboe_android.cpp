@@ -341,7 +341,7 @@ private:
         StringArray names;
 
         for (int i = 0; i < numChannels; ++i)
-            names.add ("Channel " + String (i + 1));
+            names.add("Channel " + String(deviceId) + " " + String(i + 1));
 
         return names;
     }
@@ -452,6 +452,15 @@ private:
         {
             for (int i = 0; i < numOutputChannels; ++i)
                 zeromem (outputChannelData[i], (size_t) (numFrames) * sizeof (float));
+        }
+    }
+
+    std::function<void()> onOutputStreamStartedCallback = nullptr;
+
+    void onOutputStreamStarted(oboe::AudioStream* audioStream) {
+        outputDeviceId = audioStream->getDeviceId();
+        if (onOutputStreamStartedCallback != nullptr) {
+            onOutputStreamStartedCallback();
         }
     }
 
@@ -767,6 +776,7 @@ private:
                 inputStream->start();
 
             outputStream->start();
+            owner.onOutputStreamStarted(outputStream->getNativeStream());
 
             isInputLatencyDetectionSupported  = isLatencyDetectionSupported (inputStream.get());
             isOutputLatencyDetectionSupported = isLatencyDetectionSupported (outputStream.get());
@@ -972,6 +982,7 @@ private:
                                                         this));
 
                     outputStream->start();
+                    owner.onOutputStreamStarted(outputStream->getNativeStream());
                 }
             }
         }
@@ -1108,11 +1119,15 @@ public:
         auto& name = outputDeviceInfo.name.isNotEmpty() ? outputDeviceInfo.name
                                                         : inputDeviceInfo.name;
 
-        return new OboeAudioIODevice (name,
+        auto ret = new OboeAudioIODevice (name,
                                       inputDeviceInfo.id, inputDeviceInfo.sampleRates,
                                       inputDeviceInfo.numChannels,
                                       outputDeviceInfo.id, outputDeviceInfo.sampleRates,
                                       outputDeviceInfo.numChannels);
+        ret->onOutputStreamStartedCallback = [this]() {
+            callDeviceChangeListeners();
+        };
+        return ret;
     }
 
     static bool isOboeAvailable()
@@ -1210,8 +1225,8 @@ public:
         if (deviceTypeString.isEmpty()) // unknown device
             return;
 
-        auto name = juceString ((jstring) env->CallObjectMethod (device, getProductNameMethod)) + " " + deviceTypeString;
         auto id = env->CallIntMethod (device, getIdMethod);
+        auto name = String(id) + "/" + juceString ((jstring) env->CallObjectMethod (device, getProductNameMethod)) + " " + deviceTypeString;
 
         auto jSampleRates = LocalRef<jintArray> ((jintArray) env->CallObjectMethod (device, getSampleRatesMethod));
         auto sampleRates = jintArrayToJuceArray (jSampleRates);
