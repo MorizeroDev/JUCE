@@ -1665,6 +1665,18 @@ BigInteger iOSAudioIODevice::getActiveOutputChannels() const        { return pim
 int iOSAudioIODevice::getInputLatencyInSamples()                    { return roundToInt (pimpl->sampleRate * [AVAudioSession sharedInstance].inputLatency); }
 int iOSAudioIODevice::getOutputLatencyInSamples()                   { return roundToInt (pimpl->sampleRate * [AVAudioSession sharedInstance].outputLatency); }
 int iOSAudioIODevice::getXRunCount() const noexcept                 { return pimpl->xrun; }
+
+std::optional<String> iOSAudioIODevice::getRoutedOutputDeviceName() const
+{
+    const auto outputs = [AVAudioSession sharedInstance].currentRoute.outputs;
+
+    if (outputs.count != 1)
+        return {};
+
+    const auto name = nsStringToJuce (((AVAudioSessionPortDescription*) outputs.firstObject).portName);
+    return name.isNotEmpty() ? std::optional<String> { name } : std::nullopt;
+}
+
 AudioWorkgroup iOSAudioIODevice::getWorkgroup() const               { return pimpl->workgroup; }
 
 void iOSAudioIODevice::setMidiMessageCollector (MidiMessageCollector* collector) { pimpl->messageCollector = collector; }

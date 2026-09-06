@@ -359,6 +359,15 @@ public:
 
     virtual int getAudioOutputStreamState() const noexcept;
 
+    /** Returns the name of the physical output device used by the current stream, when available.
+
+        This may differ from getName(), which identifies the logical or configured device.
+        The returned name is intended for display and must not be treated as a stable hardware
+        identifier. Backends that cannot identify a single routed output device return nullopt.
+        This method may perform platform queries and must not be called from a realtime thread.
+    */
+    virtual std::optional<String> getRoutedOutputDeviceName() const { return {}; }
+
     //==============================================================================
 protected:
     /** Creates a device, setting its name and type member variables. */

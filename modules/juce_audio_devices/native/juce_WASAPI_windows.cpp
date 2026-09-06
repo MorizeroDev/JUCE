@@ -1368,6 +1368,11 @@ public:
     String getLastError() override                          { return lastError; }
     int getXRunCount() const noexcept override              { return inputDevice != nullptr ? inputDevice->xruns : -1; }
 
+    std::optional<String> getRoutedOutputDeviceName() const override
+    {
+        return outputDevice != nullptr ? std::optional<String> { getName() } : std::nullopt;
+    }
+
     std::optional<BigInteger> getDefaultOutputChannels() const override
     {
         return outputDevice != nullptr ? outputDevice->getDefaultLayout() : std::nullopt;

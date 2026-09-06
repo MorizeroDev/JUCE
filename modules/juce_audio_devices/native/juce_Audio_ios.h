@@ -76,6 +76,8 @@ public:
 
     int getXRunCount() const noexcept override;
 
+    std::optional<String> getRoutedOutputDeviceName() const override;
+
     AudioWorkgroup getWorkgroup() const override;
 
     //==============================================================================
