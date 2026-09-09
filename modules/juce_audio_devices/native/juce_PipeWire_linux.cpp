@@ -219,8 +219,8 @@ public:
                 node.id = id;
                 node.isSink = mediaClassIsSink (mediaClass);
                 node.name = getNodeKey (getProp (props, PW_KEY_NODE_NAME), getProp (props, PW_KEY_OBJECT_PATH));
-                node.displayName = String (getProp (props, PW_KEY_NODE_DESCRIPTION));
-                node.objectPath = String (getProp (props, PW_KEY_OBJECT_PATH));
+                node.displayName = String::fromUTF8 (getProp (props, PW_KEY_NODE_DESCRIPTION));
+                node.objectPath = String::fromUTF8 (getProp (props, PW_KEY_OBJECT_PATH));
 
                 if (node.name.isNotEmpty())
                     nodes.add (node);
@@ -235,8 +235,8 @@ public:
                 PortRecord port;
                 port.id = id;
                 port.nodeId = (uint32_t) atoi (nodeIdStr);
-                port.channel = String (getProp (props, PW_KEY_AUDIO_CHANNEL));
-                port.isInput = String (getProp (props, PW_KEY_PORT_DIRECTION)) == "in";
+                port.channel = String::fromUTF8 (getProp (props, PW_KEY_AUDIO_CHANNEL));
+                port.isInput = String::fromUTF8 (getProp (props, PW_KEY_PORT_DIRECTION)) == "in";
                 ports.add (port);
             }
         }
@@ -440,11 +440,11 @@ private:
 
     static String getNodeKey (const char* nodeName, const char* objectPath)
     {
-        if (nodeName != nullptr && String (nodeName).isNotEmpty())
-            return String (nodeName);
+        if (nodeName != nullptr && String::fromUTF8 (nodeName).isNotEmpty())
+            return String::fromUTF8 (nodeName);
 
-        if (objectPath != nullptr && String (objectPath).isNotEmpty())
-            return String (objectPath);
+        if (objectPath != nullptr && String::fromUTF8 (objectPath).isNotEmpty())
+            return String::fromUTF8 (objectPath);
 
         return {};
     }
@@ -459,12 +459,12 @@ private:
                 if (auto* start = strchr (quote, '"'))
                 {
                     if (auto* end = strchr (start + 1, '"'))
-                        return String (start + 1, (int) (end - start - 1));
+                        return String::fromUTF8 (start + 1, (int) (end - start - 1));
                 }
             }
         }
 
-        return String (value).trim();
+        return String::fromUTF8 (value).trim();
     }
 
     //==============================================================================
