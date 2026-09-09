@@ -667,6 +667,15 @@ public:
             return lastError;
         }
 
+        // The format negotiation events can arrive asynchronously, so until
+        // the first process callback reports the real values, fall back to the
+        // values that were requested in open().
+        if (currentSampleRate <= 0)
+            currentSampleRate = requestedSampleRate;
+
+        if (currentBufferSize <= 0)
+            currentBufferSize = requestedBufferSize;
+
         isOpen_ = true;
         isPlaying_ = false;
         return {};
