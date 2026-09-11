@@ -2333,6 +2333,16 @@ public:
             needsRescan = true;
             triggerAsyncUpdate();
         });
+        std::shared_ptr<PropertyListener> onDefaultInputDeviceChanged = SystemObject{}.createPropertyListener (kAudioHardwarePropertyDefaultInputDevice, [&]
+        {
+            JUCE_COREAUDIO_LOG ("System default input device change detected");
+            triggerAsyncUpdate();
+        });
+        std::shared_ptr<PropertyListener> onDefaultOutputDeviceChanged = SystemObject{}.createPropertyListener (kAudioHardwarePropertyDefaultOutputDevice, [&]
+        {
+            JUCE_COREAUDIO_LOG ("System default output device change detected");
+            triggerAsyncUpdate();
+        });
     };
 };
 
