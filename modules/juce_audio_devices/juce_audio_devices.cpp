@@ -165,6 +165,33 @@
  #endif
  #undef SIZEOF
 
+ #if JUCE_PIPEWIRE
+  /* Got an include error here? If so, you've either not got PipeWire installed,
+     or you've not got your paths set up correctly to find its header files.
+
+     The package you need to install to get PipeWire support is
+     "libpipewire-0.3-dev".
+
+     If you don't have PipeWire installed and don't want to build JUCE with
+     PipeWire support, just set the JUCE_PIPEWIRE flag to 0.
+  */
+  JUCE_BEGIN_IGNORE_WARNINGS_GCC_LIKE ("-Wzero-length-array",
+                                       "-Wold-style-cast",
+                                       "-Wredundant-decls",
+                                       "-Wmissing-field-initializers",
+                                       "-Wunused-parameter",
+                                       "-Wsign-conversion",
+                                       "-Wcast-align",
+                                       "-Wshadow",
+                                       "-Wshadow-field")
+  #include <pipewire/pipewire.h>
+  #include <pipewire/extensions/metadata.h>
+  #include <spa/param/audio/format-utils.h>
+  #include <spa/param/audio/raw.h>
+  JUCE_END_IGNORE_WARNINGS_GCC_LIKE
+  #include "native/juce_PipeWire_linux.cpp"
+ #endif
+
 //==============================================================================
 #elif JUCE_ANDROID
 

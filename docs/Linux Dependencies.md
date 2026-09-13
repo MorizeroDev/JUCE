@@ -24,6 +24,7 @@ or
 #### juce_audio_devices
 - libasound2-dev
 - libjack-jackd2-dev (unless `JUCE_JACK=0`)
+- libpipewire-0.3-dev (unless `JUCE_PIPEWIRE=0`)
 
 #### juce_audio_processors
 - ladspa-sdk (unless `JUCE_PLUGINHOST_LADSPA=0`)
@@ -66,7 +67,7 @@ available during runtime.
 The full command is as follows:
 
     sudo apt update
-    sudo apt install libasound2-dev libjack-jackd2-dev \
+    sudo apt install libasound2-dev libjack-jackd2-dev libpipewire-0.3-dev \
         ladspa-sdk \
         libcurl4-openssl-dev  \
         libfreetype-dev libfontconfig1-dev \
